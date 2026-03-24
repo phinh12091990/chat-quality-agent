@@ -175,8 +175,6 @@ Dành cho fanpage do cá nhân tạo và quản lý, không nằm trong Business
 
 8. Quay lại Graph API Explorer, trong ô query nhập: `me/accounts` → click **Gửi**.
 
-![me/accounts](/screenshots/facebook/Fb-fanpage-10.png)
-
 9. Kết quả trả về danh sách fanpage:
    - `"id"`: đây là **Page ID**
    - `"access_token"`: đây là **Page Access Token**
