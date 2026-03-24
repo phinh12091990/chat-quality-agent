@@ -13,6 +13,8 @@ services:
     image: buitanviet/chat-quality-agent-nginx:latest
     container_name: cqa-nginx
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     ports:
       - "80:80"
       - "443:443"
@@ -29,6 +31,8 @@ services:
     image: buitanviet/chat-quality-agent:latest
     container_name: cqa-app
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     expose:
       - "8080"
     env_file:
