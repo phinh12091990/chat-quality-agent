@@ -236,7 +236,7 @@
                           v-if="authImageCache[getAttachmentUrl(att)] && authImageCache[getAttachmentUrl(att)] !== 'loading'"
                           :src="authImageCache[getAttachmentUrl(att)]"
                           style="max-width: 200px; max-height: 200px; border-radius: 8px; cursor: pointer;"
-                          @click="openUrl(getAttachmentUrl(att))"
+                          @click="lightboxSrc = authImageCache[getAttachmentUrl(att)]"
                           @error="onImageError($event, att)"
                         />
                         <v-progress-circular v-else-if="authImageCache[getAttachmentUrl(att)] === 'loading'" indeterminate size="24" width="2" class="ma-2" />
@@ -336,6 +336,12 @@
       </v-col>
     </v-row>
     <v-snackbar v-model="snackbar" color="success" timeout="2000">{{ snackText }}</v-snackbar>
+
+    <!-- Lightbox overlay -->
+    <div v-if="lightboxSrc" class="lightbox-overlay" @click="lightboxSrc = ''">
+      <img :src="lightboxSrc" class="lightbox-img" @click.stop />
+      <v-btn icon="mdi-close" variant="flat" color="white" size="small" class="lightbox-close" @click="lightboxSrc = ''" />
+    </div>
   </div>
 </template>
 
@@ -517,6 +523,7 @@ const evaluationFilterOptions = [
   { title: 'Không đạt', value: 'FAIL' },
 ]
 const snackbar = ref(false)
+const lightboxSrc = ref('')
 const snackText = ref('')
 const searchQuery = ref('')
 const messagesContainer = ref<HTMLElement | null>(null)
@@ -645,9 +652,6 @@ function hasAttachments(msg: Message) {
   }
 }
 
-function openUrl(url: string) {
-  window.open(url, '_blank')
-}
 
 function getAttachmentUrl(att: any): string {
   if (att.local_path) return `/api/v1/files/${att.local_path}`
@@ -775,3 +779,31 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: default;
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+}
+</style>

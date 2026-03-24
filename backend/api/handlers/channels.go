@@ -33,6 +33,7 @@ type CreateChannelRequest struct {
 	ChannelType string          `json:"channel_type" binding:"required,oneof=zalo_oa facebook"`
 	Name        string          `json:"name" binding:"required,min=2,max=255"`
 	Credentials json.RawMessage `json:"credentials" binding:"required"` // JSON: varies by type
+	Metadata    string          `json:"metadata"`
 }
 
 type ChannelResponse struct {
@@ -139,7 +140,7 @@ func CreateChannel(c *gin.Context) {
 		ExternalID:           externalID,
 		CredentialsEncrypted: credentialsToStore,
 		IsActive:             true,
-		Metadata:             "{}",
+		Metadata:             func() string { if req.Metadata != "" { return req.Metadata }; return "{}" }(),
 		CreatedAt:            now,
 		UpdatedAt:            now,
 	}
@@ -213,10 +214,15 @@ func DeleteChannel(c *gin.Context) {
 		return
 	}
 
-	// Cascade: delete messages → conversations → channel
+	// Cascade: delete files → messages → conversations → channel
 	var convIDs []string
 	db.DB.Model(&models.Conversation{}).Where("channel_id = ? AND tenant_id = ?", channelID, tenantID).Pluck("id", &convIDs)
 	if len(convIDs) > 0 {
+		// Delete local attachment files
+		for _, convID := range convIDs {
+			dir := filepath.Join("/var/lib/cqa/files", tenantID, convID)
+			os.RemoveAll(dir)
+		}
 		db.DB.Where("conversation_id IN ? AND tenant_id = ?", convIDs, tenantID).Delete(&models.Message{})
 	}
 	db.DB.Where("channel_id = ? AND tenant_id = ?", channelID, tenantID).Delete(&models.Conversation{})

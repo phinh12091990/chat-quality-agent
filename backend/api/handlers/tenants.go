@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"time"
 
@@ -166,6 +168,9 @@ func DeleteTenant(c *gin.Context) {
 	tenantID := middleware.GetTenantID(c)
 
 	// Full cascade delete: child → parent order
+
+	// 0. Delete all local attachment files for this tenant
+	os.RemoveAll(filepath.Join("/var/lib/cqa/files", tenantID))
 
 	// 1. Messages (via conversations)
 	var convIDs []string

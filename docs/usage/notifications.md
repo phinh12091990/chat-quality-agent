@@ -71,13 +71,17 @@ Bạn có thể viết template riêng thay vì dùng mặc định:
 
 | Biến | Giá trị |
 |------|---------|
-| `{{job_name}}` | Tên công việc |
-| `{{total}}` | Tổng cuộc chat đã phân tích |
-| `{{passed}}` | Số cuộc chat đạt |
-| `{{failed}}` | Số cuộc chat không đạt |
-| `{{issues}}` | Số vấn đề phát hiện |
-| `{{content}}` | Nội dung đánh giá chi tiết |
-| `{{link}}` | URL xem kết quả trên hệ thống |
+| Biến | Giá trị |
+|------|---------|
+| `job_name` | Tên công việc |
+| `total` | Tổng cuộc chat đã phân tích |
+| `passed` | Số cuộc chat đạt |
+| `failed` | Số cuộc chat không đạt |
+| `issues` | Số vấn đề phát hiện |
+| `content` | Nội dung đánh giá chi tiết |
+| `link` | URL xem kết quả trên hệ thống |
+
+Cú pháp dùng trong template: bọc tên biến trong dấu ngoặc nhọn kép, ví dụ: `{` `{job_name}` `}`
 
 ## Lịch sử thông báo
 

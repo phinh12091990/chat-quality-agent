@@ -95,7 +95,7 @@ Cấu hình nơi nhận kết quả phân tích. Có thể thêm nhiều kênh t
 
 **Tùy chỉnh nội dung thông báo:**
 - Mặc định: Tự động tạo báo cáo tổng hợp + danh sách vấn đề
-- Tùy chỉnh: Viết template riêng với các biến: `{{job_name}}`, `{{total}}`, `{{passed}}`, `{{failed}}`, `{{issues}}`, `{{content}}`, `{{link}}`
+- Tùy chỉnh: Viết template riêng với các biến: `job_name`, `total`, `passed`, `failed`, `issues`, `content`, `link` (bọc trong dấu ngoặc nhọn kép)
 
 Bấm **Gửi thử** để kiểm tra — phải thấy tin nhắn test trước khi tiếp tục.
 
