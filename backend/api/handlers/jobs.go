@@ -112,6 +112,7 @@ func GetJob(c *gin.Context) {
 var allowedJobUpdateFields = map[string]bool{
 	"name": true, "description": true, "type": true, "status": true,
 	"input_channel_ids": true, "outputs": true, "rules_config": true,
+	"rules_content": true, "skip_conditions": true,
 	"ai_provider": true, "ai_model": true, "ai_system_prompt": true,
 	"schedule_cron": true, "schedule_enabled": true,
 	"date_from": true, "date_to": true, "max_conversations": true,
