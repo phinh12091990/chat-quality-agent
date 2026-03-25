@@ -97,11 +97,11 @@
         <LanguageSwitcher v-if="!isRail" />
 
         <!-- Docs + Version -->
-        <div v-if="!isRail" class="mt-2 d-flex align-center ga-1">
-          <v-btn size="x-small" variant="text" href="https://tanviet12.github.io/chat-quality-agent/" target="_blank" prepend-icon="mdi-file-document">Docs</v-btn>
+        <div v-if="!isRail" class="mt-2 d-flex align-center">
+          <v-btn size="small" variant="text" href="https://tanviet12.github.io/chat-quality-agent/guide/introduction.html" target="_blank" prepend-icon="mdi-file-document" class="text-none">Docs</v-btn>
           <v-spacer />
-          <v-chip size="x-small" variant="tonal" :color="updateInfo?.has_update ? 'warning' : 'success'" :href="'https://tanviet12.github.io/chat-quality-agent/changelog.html'" target="_blank" style="cursor: pointer;">
-            <v-icon start size="8" :icon="updateInfo?.has_update ? 'mdi-circle' : 'mdi-circle'" :color="updateInfo?.has_update ? 'warning' : 'success'" />
+          <v-chip size="small" variant="tonal" :color="updateInfo?.has_update ? 'warning' : 'success'" href="https://tanviet12.github.io/chat-quality-agent/changelog.html" target="_blank" style="cursor: pointer;">
+            <v-icon start size="10" icon="mdi-circle" />
             {{ updateInfo?.current || 'dev' }}
           </v-chip>
         </div>
