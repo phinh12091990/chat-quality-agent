@@ -243,7 +243,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { clearTenantCache } from '../router'
+import { clearTenantCache, permissionDeniedMsg, clearPermissionDeniedMsg } from '../router'
 import { useTheme, useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../stores/auth'
@@ -275,6 +275,14 @@ const currentTenantInitial = computed(() => {
   return t ? t.name.charAt(0).toUpperCase() : '?'
 })
 
+// Show permission denied toast when redirected by router guard
+watch(() => route.path, () => {
+  if (permissionDeniedMsg) {
+    showSnack(permissionDeniedMsg, 'error')
+    clearPermissionDeniedMsg()
+  }
+})
+
 watch(tenantId, async (id) => {
   if (id) {
     currentTenantId.value = id
@@ -291,11 +299,14 @@ watch(tenantId, async (id) => {
 const CREATE_TENANT_ID = '__create__'
 const MANAGE_TENANT_ID = '__manage__'
 
-const tenantSelectItems = computed(() => [
-  ...tenants.value,
-  { id: CREATE_TENANT_ID, name: '+ Thêm công ty', slug: '' },
-  { id: MANAGE_TENANT_ID, name: 'Quản lý công ty', slug: '' },
-])
+const tenantSelectItems = computed(() => {
+  const items = [...tenants.value]
+  if (authStore.user?.is_admin) {
+    items.push({ id: CREATE_TENANT_ID, name: '+ Thêm công ty', slug: '' })
+  }
+  items.push({ id: MANAGE_TENANT_ID, name: 'Quản lý công ty', slug: '' })
+  return items
+})
 
 function onTenantSelect(newId: string) {
   if (newId === CREATE_TENANT_ID) {

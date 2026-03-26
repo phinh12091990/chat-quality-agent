@@ -146,7 +146,7 @@ func SetupRouter(cfg *config.Config) *gin.Engine {
 			// Conversations & Messages
 			tenant.GET("/onboarding-status", handlers.GetOnboardingStatus)
 			tenant.GET("/conversations", middleware.RequirePermission("messages", "r"), handlers.ListConversations)
-			tenant.GET("/conversations/export", middleware.RequirePermission("messages", "r"), handlers.ExportMessages)
+			tenant.GET("/conversations/export", middleware.RequirePermission("messages", "w"), handlers.ExportMessages)
 			tenant.GET("/conversations/evaluated", middleware.RequirePermission("messages", "r"), handlers.ListEvaluatedConversations)
 			tenant.GET("/conversations/:conversationId/messages", middleware.RequirePermission("messages", "r"), handlers.GetConversationMessages)
 			tenant.GET("/conversations/:conversationId/evaluations", middleware.RequirePermission("messages", "r"), handlers.GetConversationEvaluations)
