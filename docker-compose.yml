@@ -5,7 +5,6 @@ services:
     build: .
     container_name: cqa-app
     restart: unless-stopped
-    # Traefik trên Dokploy sẽ đọc port này để điều hướng traffic trực tiếp vào app
     expose:
       - "8080"
     env_file:
@@ -24,6 +23,16 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
+    # Cấu hình định tuyến cho Dokploy/Traefik
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.cqa-app.rule=Host(`chat.matbaohosting.com`)
+      - traefik.http.routers.cqa-app.entrypoints=web,websecure
+      - traefik.http.services.cqa-app.loadbalancer.server.port=8080
+    networks:
+      - dokploy-network
+      - default
 
   db:
     image: mysql:8.0
@@ -41,11 +50,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-      --default-authentication-plugin=mysql_native_password
+    # Bắt buộc dùng mảng (array) này để chống lỗi syntax khiến DB sập
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
 
 volumes:
   mysql_data:
   file_storage:
+
+networks:
+  dokploy-network:
+    external: true
