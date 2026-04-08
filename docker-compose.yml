@@ -23,6 +23,7 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
+    # Cấu hình định tuyến cho Dokploy/Traefik
     labels:
       - traefik.enable=true
       - traefik.docker.network=dokploy-network
@@ -31,10 +32,10 @@ services:
       - traefik.http.services.cqa-app.loadbalancer.server.port=8080
     networks:
       - dokploy-network
-      - internal
+      - default
 
   db:
-    image: mysql:8.0.33
+    image: mysql:8.0
     container_name: cqa-db
     restart: unless-stopped
     environment:
@@ -42,7 +43,6 @@ services:
       MYSQL_DATABASE: ${DB_NAME:-cqa}
       MYSQL_USER: ${DB_USER:-cqa}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-      TZ: Asia/Ho_Chi_Minh
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -50,13 +50,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+    # Bắt buộc dùng mảng (array) này để chống lỗi syntax khiến DB sập
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --default-authentication-plugin=mysql_native_password
-    networks:
-      - internal
 
 volumes:
   mysql_data:
@@ -65,5 +63,3 @@ volumes:
 networks:
   dokploy-network:
     external: true
-  internal:
-    driver: bridge
