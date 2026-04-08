@@ -23,13 +23,6 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
-    # Cấu hình định tuyến cho Dokploy/Traefik
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=dokploy-network
-      - traefik.http.routers.cqa-app.rule=Host(`chat.matbaohosting.com`)
-      - traefik.http.routers.cqa-app.entrypoints=web,websecure
-      - traefik.http.services.cqa-app.loadbalancer.server.port=8080
     networks:
       - dokploy-network
       - default
