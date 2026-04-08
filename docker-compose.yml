@@ -13,6 +13,9 @@ services:
       - APP_ENV=production
       - DB_HOST=db
       - DB_PORT=3306
+      # CẦN THÊM: Nếu code Golang/NodeJS của bạn dùng biến toàn cục như DATABASE_URL
+      # thay vì đọc lẻ DB_HOST, bạn phải ghi đè nó ở đây để chặn IP cũ. Ví dụ:
+      # - DATABASE_URL=mysql://${DB_USER:-cqa}:${DB_PASSWORD}@db:3306/${DB_NAME:-cqa}?parseTime=true
     depends_on:
       db:
         condition: service_healthy
@@ -22,7 +25,6 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
-    # Cấu hình định tuyến cho Dokploy/Traefik
     labels:
       - traefik.enable=true
       - traefik.docker.network=dokploy-network
@@ -31,7 +33,7 @@ services:
       - traefik.http.services.cqa-app.loadbalancer.server.port=8080
     networks:
       - dokploy-network
-      - default
+      - internal-network # Giao tiếp nội bộ với DB
 
   db:
     image: mysql:8.0
@@ -45,15 +47,17 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      # Cập nhật: Thêm user/pass để tránh false-positive khi check health
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
-    # Bắt buộc dùng mảng (array) này để chống lỗi syntax khiến DB sập
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --default-authentication-plugin=mysql_native_password
+    networks:
+      - internal-network # Cô lập DB, không expose ra mạng ngoài
 
 volumes:
   mysql_data:
@@ -62,3 +66,5 @@ volumes:
 networks:
   dokploy-network:
     external: true
+  internal-network: # Mạng nội bộ chuyên dụng cho App và DB
+    driver: bridge
