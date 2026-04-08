@@ -3,7 +3,7 @@ version: "3.8"
 services:
   app:
     build: .
-    container_name: cqa-app
+    container_name: cqa-app1
     restart: unless-stopped
     expose:
       - "8080"
@@ -11,7 +11,7 @@ services:
       - .env
     environment:
       - APP_ENV=production
-      - DB_HOST=cqa-db
+      - DB_HOST=cqa-db1
       - DB_PORT=3306
       - TZ=Asia/Ho_Chi_Minh
     depends_on:
@@ -36,7 +36,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: cqa-db
+    container_name: cqa-db1
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
