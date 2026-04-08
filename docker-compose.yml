@@ -1,28 +1,11 @@
 version: "3.8"
 
 services:
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.nginx
-    container_name: cqa-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - LEGO_DOMAIN=${LEGO_DOMAIN:-}
-      - LEGO_EMAIL=${LEGO_EMAIL:-}
-    volumes:
-      - lego_certs:/etc/lego
-      - lego_webroot:/var/www/acme
-    depends_on:
-      - app
-
   app:
     build: .
     container_name: cqa-app
     restart: unless-stopped
+    # Traefik trên Dokploy sẽ đọc port này để điều hướng traffic trực tiếp vào app
     expose:
       - "8080"
     env_file:
@@ -53,8 +36,6 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "127.0.0.1:3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -68,5 +49,3 @@ services:
 volumes:
   mysql_data:
   file_storage:
-  lego_certs:
-  lego_webroot:
