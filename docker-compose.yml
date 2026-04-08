@@ -46,6 +46,6 @@ services:
       --collation-server=utf8mb4_unicode_ci
       --default-authentication-plugin=mysql_native_password
 
-volumes:
-  mysql_data: null
-  file_storage: null
+#volumes:
+  #mysql_data: null
+  #file_storage: null
