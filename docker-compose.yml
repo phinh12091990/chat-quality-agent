@@ -47,5 +47,5 @@ services:
       --default-authentication-plugin=mysql_native_password
 
 volumes:
-  mysql_data: null
-  file_storage: null
+  mysql_data:
+  file_storage:
