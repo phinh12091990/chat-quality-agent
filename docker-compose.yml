@@ -57,8 +57,8 @@ services:
       - --default-authentication-plugin=mysql_native_password
 
 volumes:
-  mysql_data:
-  file_storage:
+  mysql_data: null
+  file_storage: null
 
 networks:
   dokploy-network:
