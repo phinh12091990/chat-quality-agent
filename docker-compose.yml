@@ -24,7 +24,6 @@ services:
     security_opt:
       - no-new-privileges:true
     networks:
-      - dokploy-network
       - default
 
   db:
